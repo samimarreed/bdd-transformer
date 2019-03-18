@@ -14,11 +14,11 @@ typedef struct Link{
     int dashed;
     struct NodeStruct *target;
 }Link;
-void increaseLinkAarray(struct Link **data,int size,int offset)
+void increaseLinkAarray(Link **data,int size,int offset)
 {
     *data = realloc(*data, sizeof(Link) * (size+offset));
 }
-void increaseNodeArray(struct NodeStruct **data,int size,int offset)
+void increaseNodeArray(NodeStruct **data,int size,int offset)
 {
     *data = realloc(*data, sizeof(NodeStruct) * (size+offset));
 }
@@ -30,12 +30,12 @@ void addTarget(NodeStruct *data,int size,int sourceValue,int target,int dashed){
             sourceNode = (data+i);
         }
         if((data+i)->sourceValue==target){
-            targetNode = (data+i);
+            targetNode = (NodeStruct *)(data+i);
         }
     }
     Link *l = (Link *)malloc(sizeof(Link));
     l->dashed = dashed;
-    l->target = targetNode;
+    l->target = (struct NodeStruct *)targetNode;
     increaseLinkAarray(&(sourceNode->targets),sourceNode->targetSize,1);
     sourceNode->targetSize = sourceNode->targetSize + 1;
     sourceNode->targets[sourceNode->targetSize-1] = *l;
@@ -200,7 +200,7 @@ int main()
                 }
             }
             for(int j=0;j<(nodesArray+i)->targetSize;j++){
-                NodeStruct *internal = (iterator+j)->target;
+                NodeStruct *internal = (NodeStruct *)(iterator+j)->target;
                 int rankToShow=0;
                 rankToShow = internal->rank;
                 //Still on same rank
